@@ -1,48 +1,116 @@
 class Slider {
-  constructor({ title = "Controls", container }) {
-    this.container = container;
+  constructor({ title = "Controls", container = document.body } = {}) {
     this.el = document.createElement("div");
-    this.el.className = "glass-controller";
+    this.el.className = "ui-controller";
 
+    /* Toggle ( > ) */
+    this.toggle = document.createElement("div");
+    this.toggle.className = "ui-toggle";
+    this.toggle.innerHTML = `<i class="ri-arrow-up-s-line"></i>`;
+
+    /* Title */
     if (title) {
-      const titleEl = document.createElement("div");
-      titleEl.className = "glass-controller__title";
-      titleEl.textContent = title;
-      this.el.appendChild(titleEl);
+      this.titleEl = document.createElement("div");
+      this.titleEl.className = "ui-controller__title";
+      this.titleEl.textContent = title;
+      this.el.appendChild(this.titleEl);
     }
 
+    /* Content wrapper */
+    this.content = document.createElement("div");
+    this.content.className = "ui-controller__content";
+
+    this.el.append(this.toggle, this.content);
     container.appendChild(this.el);
+
+    /* Toggle behavior */
+    this.toggle.addEventListener("click", () => {
+      this.el.classList.toggle("collapsed");
+    });
   }
 
   add(object, prop, { min = 0, max = 1, step = 0.01, label } = {}) {
     const control = document.createElement("div");
-    control.className = "glass-control";
+    control.className = "ui-control";
 
+    /* Header */
     const header = document.createElement("div");
-    header.className = "glass-control__header";
+    header.className = "ui-control__header";
 
     const name = document.createElement("span");
     name.textContent = label || prop;
 
-    const value = document.createElement("span");
-    value.textContent = object[prop];
+    const valueEl = document.createElement("span");
 
-    header.append(name, value);
+    header.append(name, valueEl);
 
-    const input = document.createElement("input");
-    input.type = "range";
-    input.min = min;
-    input.max = max;
-    input.step = step;
-    input.value = object[prop];
+    /* Slider */
+    const slider = document.createElement("div");
+    slider.className = "ui-slider";
 
-    input.addEventListener("input", () => {
-      object[prop] = parseFloat(input.value);
-      value.textContent = input.value;
+    const fill = document.createElement("div");
+    fill.className = "ui-slider__fill";
+
+    const thumb = document.createElement("div");
+    thumb.className = "ui-slider__thumb";
+
+    slider.append(fill, thumb);
+
+    const range = max - min;
+    const precision =
+      step < 1 ? (String(step).split(".")[1] || "").length : 0;
+
+    const updateUI = (value) => {
+      const percent = (value - min) / range;
+      fill.style.width = `${percent * 100}%`;
+      thumb.style.left = `${percent * 100}%`;
+      valueEl.textContent = value.toFixed(precision);
+    };
+
+    const setFromClientX = (clientX) => {
+      const rect = slider.getBoundingClientRect();
+      let percent = (clientX - rect.left) / rect.width;
+      percent = Math.min(1, Math.max(0, percent));
+
+      let raw = min + percent * range;
+      let stepped = Math.round(raw / step) * step;
+      stepped = Math.min(max, Math.max(min, stepped));
+
+      object[prop] = stepped;
+      updateUI(stepped);
+    };
+
+    /* Mouse */
+    const onMouseMove = (e) => setFromClientX(e.clientX);
+    const stopMouse = () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", stopMouse);
+    };
+
+    slider.addEventListener("mousedown", (e) => {
+      setFromClientX(e.clientX);
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", stopMouse);
     });
 
-    control.append(header, input);
-    this.el.appendChild(control);
+    /* Touch */
+    const onTouchMove = (e) =>
+      setFromClientX(e.touches[0].clientX);
+    const stopTouch = () => {
+      document.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("touchend", stopTouch);
+    };
+
+    slider.addEventListener("touchstart", (e) => {
+      setFromClientX(e.touches[0].clientX);
+      document.addEventListener("touchmove", onTouchMove);
+      document.addEventListener("touchend", stopTouch);
+    });
+
+    updateUI(object[prop]);
+
+    control.append(header, slider);
+    this.content.appendChild(control);
 
     return this;
   }

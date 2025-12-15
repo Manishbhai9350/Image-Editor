@@ -10,79 +10,121 @@ body {
   height: 100%;
 }
 
-.glass-controller {
+
+.ui-controller {
   position: fixed;
   top: 1.5rem;
   right: 1.5rem;
   width: 280px;
 
-  background: var(--bg-glass);
-  backdrop-filter: var(--glass-blur-md) var(--glass-saturation);
-  -webkit-backdrop-filter: var(--glass-blur-md) var(--glass-saturation);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 
-  border: 1px solid var(--color-border-glass);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-glass-md);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
-  padding: var(--space-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-
-  color: var(--color-text-primary);
-  font-family: var(--font-family-base);
+  padding: 1rem;
+  font-family: system-ui, sans-serif;
+  color: #111;
 }
 
-/* Title */
-.glass-controller__title {
-  font-size: var(--font-size-sm);
+.ui-controller__title {
+  font-size: 0.75rem;
   font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-text-secondary);
+  color: #666;
+  margin-bottom: 0.75rem;
 }
 
-/* Row */
-.glass-control {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+/* Control */
+.ui-control {
+  margin-bottom: 0.75rem;
 }
 
-/* Label + value */
-.glass-control__header {
+.ui-control__header {
   display: flex;
   justify-content: space-between;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+  color: #444;
+  margin-bottom: 0.4rem;
 }
 
-/* Slider */
-.glass-control input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
+/* Slider track */
+.ui-slider {
+  position: relative;
   height: 4px;
+  background: #e5e5e5;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.25);
   cursor: pointer;
 }
 
-/* Slider thumb */
-.glass-control input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: white;
-  box-shadow: 0 0 0 4px rgba(124, 124, 255, 0.35);
+/* Filled bar */
+.ui-slider__fill {
+  position: absolute;
+  height: 100%;
+  background: #111;
+  border-radius: inherit;
+  width: 0%;
 }
 
-.glass-control input[type="range"]::-moz-range-thumb {
+/* Thumb */
+.ui-slider__thumb {
+  position: absolute;
+  top: 50%;
   width: 14px;
   height: 14px;
+  background: #111;
   border-radius: 50%;
-  background: white;
-  border: none;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+}
+
+.ui-slider__thumb:active {
+  cursor: grabbing;
+}
+
+
+.ui-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+
+  cursor: pointer;
+  user-select: none;
+
+  border-radius: 4px;
+}
+
+.ui-toggle:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Collapsed state */
+.ui-controller.collapsed .ui-controller__content {
+  display: none;
+  padding: 0.75rem 0.5rem;
+}
+.ui-controller.collapsed .ui-controller__title {
+  margin-bottom: 0;
+}
+
+.ui-controller.collapsed .ui-controller__content {
+  display: none;
+}
+
+.ui-controller.collapsed .ui-toggle {
+  transform: rotate(180deg);
 }
