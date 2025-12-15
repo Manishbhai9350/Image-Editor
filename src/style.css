@@ -1,1 +1,88 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
 
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+.glass-controller {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 280px;
+
+  background: var(--bg-glass);
+  backdrop-filter: var(--glass-blur-md) var(--glass-saturation);
+  -webkit-backdrop-filter: var(--glass-blur-md) var(--glass-saturation);
+
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-glass-md);
+
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+}
+
+/* Title */
+.glass-controller__title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+}
+
+/* Row */
+.glass-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+/* Label + value */
+.glass-control__header {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Slider */
+.glass-control input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+}
+
+/* Slider thumb */
+.glass-control input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(124, 124, 255, 0.35);
+}
+
+.glass-control input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+}
