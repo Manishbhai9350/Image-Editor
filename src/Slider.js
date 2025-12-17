@@ -68,6 +68,7 @@ class Slider {
       fill.style.width = `${percent * 100}%`;
       thumb.style.left = `${percent * 100}%`;
       valueEl.textContent = Math.round(value);
+      this.onUpdate()
     };
 
     const setFromClientX = (clientX) => {
@@ -115,6 +116,10 @@ class Slider {
     this.content.appendChild(control);
 
     return this;
+  }
+
+  onUpdate(fn = () => {}){
+    fn()
   }
 }
 
