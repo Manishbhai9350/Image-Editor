@@ -42,11 +42,12 @@
   /* =====================
      Backgrounds
   ====================== */
-  --bg-body: radial-gradient(
+  --bg-body: #111;
+  /* --bg-body: radial-gradient(
     circle at top left,
-    #1e1b4b,
-    #020617
-  );
+    #0e0d17,
+    #01030c
+  ); */
   --bg-light:rgba(255,255,255,.9);
   --bg-light-dark:rgba(255,255,255,.7);
   --bg-glass: rgba(255, 255, 255, 0.08);
@@ -55,6 +56,8 @@
   --bg-choose: #1facc2;
   --bg-reset: #bd2a10;
   --bg-save: #7373eb;
+  --bg-preset: rgb(238, 236, 232);
+  --bg-preset-selected: wheat;
 
   /* =====================
      Glass Effects

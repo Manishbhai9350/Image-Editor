@@ -1,11 +1,106 @@
 let image = null;
+let File = null;
 let drawState = null;
+
+export const PRESETS = {
+  Default: {
+    brightness: 100,
+    contrast: 50,
+    saturation: 50,
+    hueRotation: 0,
+    blur: 0,
+    grayscale: 0,
+    sepia: 0,
+    invert: 0,
+    opacity: 100,
+  },
+  Normal: {
+    brightness: 100,
+    contrast: 100,
+    saturation: 100,
+    hueRotation: 0,
+    blur: 0,
+    grayscale: 0,
+    sepia: 0,
+    invert: 0,
+    opacity: 100,
+  },
+
+  Warm: {
+    brightness: 100,
+    contrast: 100,
+    saturation: 100,
+    hueRotation: 8,
+    blur: 0,
+    grayscale: 0,
+    sepia: 12,
+    invert: 0,
+    opacity: 100,
+  },
+
+  Cool: {
+    brightness: 95,
+    contrast: 100,
+    saturation: 100,
+    hueRotation: 0,
+    blur: 0,
+    grayscale: 0,
+    sepia: 0,
+    invert: 0,
+    opacity: 100,
+  },
+
+  Vintage: {
+    brightness: 100,
+    contrast: 90,
+    saturation: 80,
+    hueRotation: 0,
+    blur: 0,
+    grayscale: 10,
+    sepia: 35,
+    invert: 0,
+    opacity: 100,
+  },
+
+  BnW: {
+    brightness: 90,
+    contrast: 100,
+    saturation: 0,
+    hueRotation: 0,
+    blur: 0,
+    grayscale: 100,
+    sepia: 0,
+    invert: 0,
+    opacity: 100,
+  },
+};
+
+/* ===============================
+   Handle File Downloads
+================================ */
+
+export function downloadCanvas(canvas) {
+  if (!canvas || !File) return;
+
+  const splitted = File?.name?.split(".");
+
+  if (!splitted) return;
+  const name = splitted.splice(0, splitted.length - 1).join("") + "(1)";
+
+  const link = document.createElement("a");
+  link.download = name;
+  link.href = canvas.toDataURL("image/png");
+
+  link.click();
+}
 
 /* ===============================
    Handle File Selection
 ================================ */
 export function handleFileSelect(file, canvas, ctx, params) {
   if (!file) return;
+
+  File = file;
 
   const img = new Image();
   img.onload = () => {
@@ -80,8 +175,6 @@ export function calculateDrawState(canvas) {
   const cw = canvas.width;
   const ch = canvas.height;
 
-  console.log(cw,ch)
-
   const imgRatio = image.width / image.height;
   const canvasRatio = cw / ch;
 
@@ -100,4 +193,68 @@ export function calculateDrawState(canvas) {
     drawWidth,
     drawHeight,
   };
+}
+
+export function notifyParamsUpdated() {
+  window.dispatchEvent(new CustomEvent("params:update"));
+}
+
+export function applyPresetByName({
+  presetName,
+  presets,
+  params,
+  canvas,
+  ctx,
+  redraw,
+}) {
+  const preset = presets[presetName];
+  if (!preset) return;
+
+  document.querySelectorAll(".preset-btn").forEach((b) => {
+    const preset = b.getAttribute("preset");
+    if (preset == presetName) {
+      b.classList.add("selected");
+    } else {
+      b.classList.remove("selected");
+    }
+  });
+
+  for (const key in preset) {
+    if (params[key]) {
+      params[key].value = preset[key];
+    }
+  }
+
+  notifyParamsUpdated();
+  redraw(canvas, ctx, params);
+}
+
+export function renderPresetButtons({ presets, params, canvas, ctx, redraw }) {
+  const container = document.querySelector(
+    ".ui-controller.presets .ui-controller__content"
+  );
+
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  for (const presetName in presets) {
+    const btn = document.createElement("button");
+    btn.setAttribute("preset", presetName);
+    btn.className = "preset editor-btn preset-btn";
+    btn.textContent = presetName;
+
+    btn.addEventListener("click", () => {
+      applyPresetByName({
+        presetName,
+        presets,
+        params,
+        canvas,
+        ctx,
+        redraw,
+      });
+    });
+
+    container.appendChild(btn);
+  }
 }

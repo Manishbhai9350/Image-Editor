@@ -1,14 +1,12 @@
 class Slider {
   constructor({ title = "Controls", container = document.body } = {}) {
-    this.el = document.createElement("div");
-    this.el.className = "ui-controller";
+    this.el = document.querySelector(".ui-controller.slider");
+    this.controllers = [];
 
-    /* Toggle ( > ) */
     this.toggle = document.createElement("div");
     this.toggle.className = "ui-toggle";
     this.toggle.innerHTML = `<i class="ri-arrow-up-s-line"></i>`;
 
-    /* Title */
     if (title) {
       this.titleEl = document.createElement("div");
       this.titleEl.className = "ui-controller__title";
@@ -16,14 +14,12 @@ class Slider {
       this.el.appendChild(this.titleEl);
     }
 
-    /* Content wrapper */
     this.content = document.createElement("div");
     this.content.className = "ui-controller__content";
 
     this.el.append(this.toggle, this.content);
     container.appendChild(this.el);
 
-    /* Toggle behavior */
     this.toggle.addEventListener("click", () => {
       this.el.classList.toggle("collapsed");
     });
@@ -31,7 +27,6 @@ class Slider {
 
   add(object, prop, { step = 1, label: paramLabel } = {}) {
     const config = object[prop];
-
     const min = config.min ?? 0;
     const max = config.max ?? 1;
     const label = config.label ?? paramLabel ?? prop;
@@ -40,7 +35,6 @@ class Slider {
     const control = document.createElement("div");
     control.className = "ui-control";
 
-    /* Header */
     const header = document.createElement("div");
     header.className = "ui-control__header";
 
@@ -51,7 +45,6 @@ class Slider {
 
     header.append(name, valueEl);
 
-    /* Slider */
     const slider = document.createElement("div");
     slider.className = "ui-slider";
 
@@ -68,8 +61,12 @@ class Slider {
       fill.style.width = `${percent * 100}%`;
       thumb.style.left = `${percent * 100}%`;
       valueEl.textContent = Math.round(value);
-      this.onUpdate()
     };
+
+    this.controllers.push({
+      prop,
+      update: () => updateUI(object[prop].value)
+    });
 
     const setFromClientX = (clientX) => {
       const rect = slider.getBoundingClientRect();
@@ -82,13 +79,7 @@ class Slider {
 
       config.value = value;
       updateUI(value);
-    };
-
-    /* Mouse */
-    const onMouseMove = (e) => setFromClientX(e.clientX);
-    const stopMouse = () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", stopMouse);
+      this.onUpdate();
     };
 
     slider.addEventListener("mousedown", (e) => {
@@ -97,29 +88,26 @@ class Slider {
       document.addEventListener("mouseup", stopMouse);
     });
 
-    /* Touch */
-    const onTouchMove = (e) => setFromClientX(e.touches[0].clientX);
-    const stopTouch = () => {
-      document.removeEventListener("touchmove", onTouchMove);
-      document.removeEventListener("touchend", stopTouch);
+    const onMouseMove = (e) => setFromClientX(e.clientX);
+    const stopMouse = () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", stopMouse);
     };
-
-    slider.addEventListener("touchstart", (e) => {
-      setFromClientX(e.touches[0].clientX);
-      document.addEventListener("touchmove", onTouchMove);
-      document.addEventListener("touchend", stopTouch);
-    });
 
     updateUI(config.value);
 
     control.append(header, slider);
     this.content.appendChild(control);
-
     return this;
   }
 
-  onUpdate(fn = () => {}){
-    fn()
+  update(params) {
+    this.controllers.forEach(c => {
+      if (params[c.prop]) c.update();
+    });
+  }
+
+  onUpdate(fn) {
   }
 }
 

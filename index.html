@@ -11,23 +11,64 @@
   </head>
   <body>
     <main>
-      <header>
-        <button class="editor-btn choose-btn">
-          <input style="display: none;" type="file" id="fileInput" accept="image/*" />
-          Choose Image
-        </button>
-        <button class="editor-btn reset-btn">
-          Reset
-        </button>
-        <button class="editor-btn save-btn">
-          Download
-        </button>
-      </header>
       <div class="editor">
         <div class="image-preview">
           <canvas></canvas>
         </div>
-        <div class="controls"></div>
+        <div class="controls">
+          <header>
+            <button class="editor-btn choose-btn">
+              <input
+                style="display: none"
+                type="file"
+                id="fileInput"
+                accept="image/*"
+              />
+              Choose Image
+            </button>
+            <button class="editor-btn reset-btn">Reset</button>
+            <button class="editor-btn save-btn">Download</button>
+          </header>
+          <div class="ui-controller slider">
+          </div>
+          <div class="ui-controller presets">
+            <div class="ui-controller__title">
+              Presets
+            </div>
+            <div class="ui-controller__content">
+              <button class="preset custom selected editor-btn preset-btn">
+                Custom
+              </button>
+              <button class="preset editor-btn preset-btn">
+                Meow
+              </button>
+              <button class="preset editor-btn preset-btn">
+                Clown
+              </button>
+              <button class="preset editor-btn preset-btn">
+                Meow
+              </button>
+              <button class="preset editor-btn preset-btn">
+                Clown
+              </button>
+              <button class="preset editor-btn preset-btn">
+                Meow
+              </button>
+              <button class="preset editor-btn preset-btn">
+                Clown
+              </button>
+              <button class="preset editor-btn preset-btn">
+                Meow
+              </button>
+              <button class="preset editor-btn preset-btn">
+                Clown
+              </button>
+              <button class="preset editor-btn preset-btn">
+                Meow
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
     <script type="module" src="/src/main.js"></script>
