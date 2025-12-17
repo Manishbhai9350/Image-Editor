@@ -35,7 +35,7 @@
 
   --color-text-primary: rgba(255, 255, 255, 0.9);
   --color-text-secondary: rgba(255, 255, 255, 0.65);
-  --color-text-muted: rgba(255, 255, 255, 0.45);
+  --color-text-muted: #444;
 
   --color-border-glass: rgba(255, 255, 255, 0.18);
 
@@ -47,10 +47,14 @@
     #1e1b4b,
     #020617
   );
-
+  --bg-light:rgba(255,255,255,.9);
+  --bg-light-dark:rgba(255,255,255,.7);
   --bg-glass: rgba(255, 255, 255, 0.08);
   --bg-glass-hover: rgba(255, 255, 255, 0.12);
   --bg-overlay: rgba(0, 0, 0, 0.5);
+  --bg-choose: #1facc2;
+  --bg-reset: #bd2a10;
+  --bg-save: #7373eb;
 
   /* =====================
      Glass Effects
@@ -64,11 +68,21 @@
   /* =====================
      Border Radius
   ====================== */
-  --radius-xs: 0.375rem; /* 6px */
+  --radius-mn: 0.123rem; /* 3px */ /* 3 * .041 = .123 */
+  --radius-xs: 0.375rem; /* 6px */ /* 6 * .041 = .375 */
   --radius-sm: 0.5rem;   /* 8px */
   --radius-md: 0.75rem;  /* 12px */
   --radius-lg: 1rem;     /* 16px */
   --radius-xl: 1.5rem;   /* 24px */
+
+  /* =====================
+     Flex Gap
+  ====================== */
+  --gap-sm: 10px;
+  --gap-md: 15px;
+  --gap-xm: 20px;
+  --gap-xl: 40px;
+  --gap-2xl: 80px;
 
   /* =====================
      Shadows (soft + glow)

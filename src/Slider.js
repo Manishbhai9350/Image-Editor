@@ -29,7 +29,14 @@ class Slider {
     });
   }
 
-  add(object, prop, { min = 0, max = 1, step = 0.01, label } = {}) {
+  add(object, prop, { step = 1, label: paramLabel } = {}) {
+    const config = object[prop];
+
+    const min = config.min ?? 0;
+    const max = config.max ?? 1;
+    const label = config.label ?? paramLabel ?? prop;
+    const range = max - min;
+
     const control = document.createElement("div");
     control.className = "ui-control";
 
@@ -38,7 +45,7 @@ class Slider {
     header.className = "ui-control__header";
 
     const name = document.createElement("span");
-    name.textContent = label || prop;
+    name.textContent = label;
 
     const valueEl = document.createElement("span");
 
@@ -56,15 +63,11 @@ class Slider {
 
     slider.append(fill, thumb);
 
-    const range = max - min;
-    const precision =
-      step < 1 ? (String(step).split(".")[1] || "").length : 0;
-
     const updateUI = (value) => {
       const percent = (value - min) / range;
       fill.style.width = `${percent * 100}%`;
       thumb.style.left = `${percent * 100}%`;
-      valueEl.textContent = value.toFixed(precision);
+      valueEl.textContent = Math.round(value);
     };
 
     const setFromClientX = (clientX) => {
@@ -72,12 +75,12 @@ class Slider {
       let percent = (clientX - rect.left) / rect.width;
       percent = Math.min(1, Math.max(0, percent));
 
-      let raw = min + percent * range;
-      let stepped = Math.round(raw / step) * step;
-      stepped = Math.min(max, Math.max(min, stepped));
+      let value = min + percent * range;
+      value = Math.round(value / step) * step;
+      value = Math.min(max, Math.max(min, value));
 
-      object[prop] = stepped;
-      updateUI(stepped);
+      config.value = value;
+      updateUI(value);
     };
 
     /* Mouse */
@@ -94,8 +97,7 @@ class Slider {
     });
 
     /* Touch */
-    const onTouchMove = (e) =>
-      setFromClientX(e.touches[0].clientX);
+    const onTouchMove = (e) => setFromClientX(e.touches[0].clientX);
     const stopTouch = () => {
       document.removeEventListener("touchmove", onTouchMove);
       document.removeEventListener("touchend", stopTouch);
@@ -107,7 +109,7 @@ class Slider {
       document.addEventListener("touchend", stopTouch);
     });
 
-    updateUI(object[prop]);
+    updateUI(config.value);
 
     control.append(header, slider);
     this.content.appendChild(control);
@@ -115,6 +117,5 @@ class Slider {
     return this;
   }
 }
-
 
 export default Slider;

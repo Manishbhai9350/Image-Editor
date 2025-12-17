@@ -6,17 +6,74 @@ import Slider from './Slider';
 const SliderContainer = document.querySelector('main .editor .controls')
 
 const params = {
-  blur: 12,
-  speed: 0.5,
-  scale: 1
+  brightness: {
+    value:50,
+    min:0,
+    max:100,
+    label:'Brightness'
+  },
+  contrast:{
+    value:50,
+    min:0,
+    max:100,
+    label:'Contrast'
+  },
+  exposure:{
+    value:50,
+    min:0,
+    max:100,
+    label:'Exposure'
+  },
+  saturation:{
+    value:50,
+    min:0,
+    max:100,
+    label:'Saturation'
+  },
+  hueRotation:{
+    value:0,
+    min:0,
+    max:100,
+    label:'Hue Rotation'
+  },
+  blur:{
+    value:0,
+    min:0,
+    max:100,
+    label:'Blur'
+  },
+  grayscale:{
+    value:0,
+    min:0,
+    max:100,
+    label:'Grayscale'
+  },
+  sepia:{
+    value:0,
+    min:0,
+    max:100,
+    label:'Sepia'
+  },
+  invert:{
+    value:0,
+    min:0,
+    max:100,
+    label:'Invert'
+  },
+  opacity:{
+    value:100,
+    min:0,
+    max:100,
+    label:'Opacity'
+  },
 };
 
 const gui = new Slider({
-  title: "Controler",
+  title: "Filters",
   container: SliderContainer
 });
 
-gui
-  .add(params, "blur", { min: 0, max: 30, step: 0.5 })
-  .add(params, "speed", { min: 0, max: 5, step: 0.01 })
-  .add(params, "scale", { min: 0.5, max: 2, step: 0.01 });
+
+for(const item in params) {
+  gui.add(params,item)
+}
